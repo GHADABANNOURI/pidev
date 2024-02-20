@@ -25,8 +25,9 @@ class ForumCommentaire
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\OneToMany(targetEntity: Publication::class, mappedBy: 'commentaire')]
-    private Collection $publications;
+    #[ORM\ManyToOne(inversedBy: 'commentaire')]
+    private ?Publication $publication = null;
+
 
     public function __construct()
     {
@@ -100,6 +101,18 @@ class ForumCommentaire
                 $publication->setCommentaire(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPublication(): ?Publication
+    {
+        return $this->publication;
+    }
+
+    public function setPublication(?Publication $publication): static
+    {
+        $this->publication = $publication;
 
         return $this;
     }

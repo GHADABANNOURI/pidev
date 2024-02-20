@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<title>ForumCommentaire index</title>
+
+{% block body %}
+    <h1>ForumCommentaire index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Content</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for forum_commentaire in forum_commentaires %}
+            <tr>
+                <td>{{ forum_commentaire.id }}</td>
+                <td>{{ forum_commentaire.content }}</td>
+                <td>{{ forum_commentaire.createdAt ? forum_commentaire.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ forum_commentaire.updatedAt ? forum_commentaire.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_forum_commentaire_show', {'id': forum_commentaire.id}) }}">show</a>
+                    <a href="{{ path('app_forum_commentaire_edit', {'id': forum_commentaire.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_forum_commentaire_new') }}">Create new</a>
+{% endblock %}

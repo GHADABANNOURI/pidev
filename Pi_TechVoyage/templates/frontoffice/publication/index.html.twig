@@ -1,0 +1,27 @@
+{% extends 'frontoffice/base.html.twig' %}
+
+{% block body %}
+    <h1>Publication index</h1>
+
+    <div class="row">
+        {% for publication in publications %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ asset('your_image_directory/' ~ publication.image) }}" class="card-img-top" alt="{{ publication.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ publication.title }}</h5>
+                        <p class="card-text">{{ publication.shortDescription }}</p>
+                        <p class="card-text">{{ publication.content }}</p>
+                        <a href="{{ path('app_forum_commentaire_new', {'id': publication.id}) }}" class="btn btn-primary">Show</a>
+                        <h2 class="comments-title mt-5"><span id="comment-count">{{ publication.comments|length }}</span> commentaire(s)</h2>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <p>No records found</p>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

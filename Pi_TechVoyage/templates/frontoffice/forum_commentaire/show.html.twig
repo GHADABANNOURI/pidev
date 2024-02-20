@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-
-<title>ForumCommentaire</title>
+{% extends 'backoffice/base.html.twig' %}
 
 {% block body %}
     <h1>ForumCommentaire</h1>
@@ -28,7 +26,7 @@
 
     <a href="{{ path('app_forum_commentaire_index') }}">back to list</a>
 
-    <a href="{{ path('app_forum_commentaire_edit', {'id': forum_commentaire.id}) }}">edit</a>
 
-    {{ include('forum_commentaire/_delete_form.html.twig') }}
+
+
 {% endblock %}

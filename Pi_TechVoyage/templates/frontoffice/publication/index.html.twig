@@ -12,8 +12,11 @@
                         <h5 class="card-title">{{ publication.title }}</h5>
                         <p class="card-text">{{ publication.shortDescription }}</p>
                         <p class="card-text">{{ publication.content }}</p>
-                        <a href="{{ path('app_forum_commentaire_new', {'id': publication.id}) }}" class="btn btn-primary">Show</a>
-                        <h2 class="comments-title mt-5"><span id="comment-count">{{ publication.comments|length }}</span> commentaire(s)</h2>
+                        <form action="{{ path('app_forum_commentaire_new', {'id': publication.id }) }}" method="POST">
+                        <input name="content" type="text">
+                            <button type="submit">Commenter</button>
+
+                        </form>
                     </div>
                 </div>
             </div>

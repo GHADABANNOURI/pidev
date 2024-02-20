@@ -13,8 +13,7 @@ class ForumCommentaireType extends AbstractType
     {
         $builder
             ->add('content')
-            ->add('createdAt')
-            ->add('updatedAt')
+
         ;
     }
 

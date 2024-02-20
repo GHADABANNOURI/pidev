@@ -110,7 +110,7 @@ class ForumCommentaire
         return $this->publication;
     }
 
-    public function setPublication(?Publication $publication): static
+    public function setPublication(?Publication $publication)
     {
         $this->publication = $publication;
 

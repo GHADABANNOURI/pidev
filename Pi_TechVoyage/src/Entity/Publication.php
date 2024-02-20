@@ -35,14 +35,14 @@ class Publication
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
-    #[ORM\OneToMany(targetEntity: ForumCommentaire::class, mappedBy: 'publication')]
+    #[ORM\OneToMany(targetEntity: ForumCommentaire::class, mappedBy: 'publication', cascade: ['remove'])]
+
     private Collection $comments;
 
 
     public function __construct()
     {
-        $this->commentaires = new ArrayCollection();
-        $this->commentaire = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,7 +112,6 @@ class Publication
 
         return $this;
     }
-
     public function removeComment(ForumCommentaire $comment): self
     {
         if ($this->comments->removeElement($comment)) {
@@ -124,4 +123,5 @@ class Publication
 
         return $this;
     }
+
 }

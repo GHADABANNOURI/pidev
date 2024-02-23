@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+
 #[ORM\Entity(repositoryClass: PublicationRepository::class)]
 class Publication
 {
@@ -32,6 +33,14 @@ class Publication
     #[Assert\NotBlank]
     private ?string $content = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Regex(
+      //pattern: "/^[^\s]+\.[^\s]+$/",
+      pattern: "/^[^\s]+\.(png|gif|bmp)$/i",
+      message: "The value '{{ value }}' is not a valid file path."
+    )
+    ]
+ 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
@@ -123,5 +132,17 @@ class Publication
 
         return $this;
     }
+
+    // Add this method to the Publication entity
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        // Assuming you want the createdAt from the first comment, adjust as needed
+        if ($this->comments->isEmpty()) {
+            return null; // or handle the case when there are no comments
+        }
+    
+        return $this->comments->first()->getCreatedAt();
+    }
+
 
 }

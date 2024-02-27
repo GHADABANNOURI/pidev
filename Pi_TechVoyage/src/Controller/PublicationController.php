@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Entity\Publication;
 use App\Form\PublicationType;
 use App\Repository\PublicationRepository;
@@ -20,10 +21,12 @@ class PublicationController extends AbstractController
 {
 
     private $publicationRepository;
+    private $params;
 
-    public function __construct(PublicationRepository $publicationRepository)
+    public function __construct(PublicationRepository $publicationRepository, ParameterBagInterface $params)
     {
         $this->publicationRepository = $publicationRepository;
+        $this->params = $params;
     }
 
     #[Route('/back', name: 'app_publication_indexback', methods: ['GET'])]
@@ -165,5 +168,38 @@ class PublicationController extends AbstractController
     }
 
 
-    
+
+    #[Route('/{id}/upload_image', name: 'upload_image', methods: ['POST'])]
+    public function uploadImage(Request $request, int $id, EntityManagerInterface $entityManager): Response
+    {
+        $publication = $this->publicationRepository->find($id);
+
+        if (!$publication) {
+            throw $this->createNotFoundException('Publication not found');
+        }
+
+        $form = $this->createForm(PublicationType::class, $publication);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                // Gérez l'upload de l'image ici, par exemple, déplacez-la vers le répertoire désiré
+                $newFilename = md5(uniqid()) . '.' . $imageFile->guessExtension();
+                $imageFile->move(
+                    $this->getParameter('app.path.product_images'), // Le répertoire cible configuré dans vich_uploader.yaml
+                    $newFilename
+                );
+
+                // Mettez à jour le champ 'image' dans l'entité avec le nouveau nom du fichier
+                $publication->setImage($newFilename);
+                $entityManager->flush();
+            }
+        }
+
+        return $this->redirectToRoute('app_publication_indexfront');
+    }
 }
+    

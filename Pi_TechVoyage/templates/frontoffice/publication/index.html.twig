@@ -7,15 +7,34 @@
         {% for publication in publications %}
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="{{ asset('your_image_directory/' ~ publication.image) }}" class="card-img-top" alt="{{ publication.title }}">
+                    {# Affichage de l'image #}
+                    {% if publication.image %}
+                        <img id="image-preview-{{ publication.id }}" src="{{ asset('C:\\Users\\ghada\\Downloads\\images/' ~ publication.image) }}" class="card-img-top" alt="{{ publication.title }}">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
+                    
                     <div class="card-body">
                         <h5 class="card-title">{{ publication.title }}</h5>
                         <p class="card-text">{{ publication.shortDescription }}</p>
                         <p class="card-text">{{ publication.content }}</p>
-                        <form action="{{ path('app_forum_commentaire_new', {'id': publication.id }) }}" method="POST">
-                        <input name="content" type="text">
-                            <button type="submit">Commenter</button>
 
+                        {# Formulaire pour commenter #}
+                        <form action="{{ path('app_forum_commentaire_new', {'id': publication.id }) }}" method="POST">
+                            <div class="form-group">
+                                <label for="comment">Comment:</label>
+                                <textarea class="form-control" id="comment" name="content" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary my-2">Commenter</button>
+                        </form>
+
+                        {# Formulaire pour uploader l'image #}
+                        <form action="{{ path('upload_image', {'id': publication.id }) }}" method="POST" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="image">Choisir un fichier :</label>
+                                <input type="file" name="image" id="image" class="form-control" data-publication-id="{{ publication.id }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary my-2">Valider</button>
                         </form>
                     </div>
                 </div>
@@ -27,4 +46,24 @@
         {% endfor %}
     </div>
 
+    <script>
+        // Logique JavaScript pour afficher l'image choisie avant l'envoi du formulaire
+        document.querySelectorAll('input[type="file"]').forEach(function(input) {
+            input.addEventListener('change', function() {
+                var preview = document.getElementById('image-preview-' + this.dataset.publicationId);
+                var file = this.files[0];
+                var reader = new FileReader();
+
+                reader.onloadend = function () {
+                    preview.src = reader.result;
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = "";
+                }
+            });
+        });
+    </script>
 {% endblock %}

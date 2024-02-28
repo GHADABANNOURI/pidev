@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Entity\Publication;
+use App\Entity\Like;
 use App\Form\PublicationType;
 use App\Repository\PublicationRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,6 +28,11 @@ class PublicationController extends AbstractController
     {
         $this->publicationRepository = $publicationRepository;
         $this->params = $params;
+    }
+
+    public function setPublication($publication)
+    {
+        $this->publication = $publication;
     }
 
     #[Route('/back', name: 'app_publication_indexback', methods: ['GET'])]
@@ -61,9 +67,18 @@ class PublicationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+        $publication=$form->getData();
+        if($request->files->get('publication')['image']){
+            $image =$request->files->get('publication')['image'];
+            $image_name = time().'_'.$image->getClientOriginalName();
+            $image->move($this->getParameter('image_directory'),$image_name);
+            $publication-> setImage($image_name);
+
+        }
             $entityManager->persist($publication);
             $entityManager->flush();
 
+            $this->addFlash('Success','Publication Ajouté avec Success');
             return $this->redirectToRoute('app_publication_indexback', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -72,6 +87,9 @@ class PublicationController extends AbstractController
             'form' => $form,
         ]);
     }
+
+          
+        
 
     #[Route('/{id}', name: 'app_publication_showback', methods: ['GET'])]
     public function show(int $id, PublicationRepository $publicationRepository): Response
@@ -169,37 +187,61 @@ class PublicationController extends AbstractController
 
 
 
-    #[Route('/{id}/upload_image', name: 'upload_image', methods: ['POST'])]
-    public function uploadImage(Request $request, int $id, EntityManagerInterface $entityManager): Response
-    {
-        $publication = $this->publicationRepository->find($id);
+    #[Route('/{id}/like', name: 'app_like_publication', methods: ['POST'])]
+public function likePublication(Request $request, EntityManagerInterface $entityManager, int $id): Response
+{
+    $publication = $entityManager->getRepository(Publication::class)->find($id);
 
-        if (!$publication) {
-            throw $this->createNotFoundException('Publication not found');
-        }
-
-        $form = $this->createForm(PublicationType::class, $publication);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $imageFile */
-            $imageFile = $form->get('image')->getData();
-
-            if ($imageFile) {
-                // Gérez l'upload de l'image ici, par exemple, déplacez-la vers le répertoire désiré
-                $newFilename = md5(uniqid()) . '.' . $imageFile->guessExtension();
-                $imageFile->move(
-                    $this->getParameter('app.path.product_images'), // Le répertoire cible configuré dans vich_uploader.yaml
-                    $newFilename
-                );
-
-                // Mettez à jour le champ 'image' dans l'entité avec le nouveau nom du fichier
-                $publication->setImage($newFilename);
-                $entityManager->flush();
-            }
-        }
-
-        return $this->redirectToRoute('app_publication_indexfront');
+    if (!$publication) {
+        throw $this->createNotFoundException('Publication not found');
     }
+
+    $like = new Like();
+    $like->setNom('like');
+    $like->addPublication($publication);
+
+    $entityManager->persist($like);
+    $entityManager->flush();
+
+    // Redirection vers la page précédente ou une autre page après avoir liké
+    return $this->redirectToRoute('app_publication_indexfront');
+}
+
+#[Route('/{id}/dislike', name: 'app_dislike_publication', methods: ['POST'])]
+public function dislikePublication(Request $request, EntityManagerInterface $entityManager, int $id): Response
+{
+    $publication = $entityManager->getRepository(Publication::class)->find($id);
+
+    if (!$publication) {
+        throw $this->createNotFoundException('Publication not found');
+    }
+
+    $like = new Like();
+    $like->setNom('dislike');
+    $like->addPublication($publication);
+
+    $entityManager->persist($like);
+    $entityManager->flush();
+
+    // Redirection vers la page précédente ou une autre page après avoir disliké
+    return $this->redirectToRoute('app_publication_indexfront');
+}
+
+#[Route('/{id}/reactions', name: 'app_publication_reactions', methods: ['GET'])]
+public function getReactions(int $id, EntityManagerInterface $entityManager): JsonResponse
+{
+    $publication = $entityManager->getRepository(Publication::class)->find($id);
+
+    if (!$publication) {
+        return new JsonResponse(['error' => 'Publication not found'], Response::HTTP_NOT_FOUND);
+    }
+
+    $likes = $publication->getLikes()->count();
+    $dislikes = $publication->getDislikes()->count();
+
+    return new JsonResponse(['likes' => $likes, 'dislikes' => $dislikes]);
+}
+
+
 }
     

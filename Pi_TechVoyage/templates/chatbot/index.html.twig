@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... Autres balises head ... -->
+
+    <!-- Charger le style du chatbot depuis le répertoire public/css/chatbot/ -->
+    <link rel="stylesheet" href="{{ asset('css/chatbot/chatbot.css') }}">
+</head>
+<body id="body">
+
+    <!-- ... Votre code existant ... -->
+
+    <!-- Chatbot -->
+    <div id="chatbot-container">
+        <!-- Placeholder pour le chatbot -->
+        <div id="chatbot" class="closed">
+            <!-- Contenu du chatbot ici -->
+            <div class="chat-window" id="chatbot-window">
+                <!-- Fenêtre de chat ici -->
+            </div>
+            <div>
+                <input type="text" id="chatbot-message" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ... Votre code existant ... -->
+
+    <!-- Charger le script du chatbot depuis le répertoire public/js/chatbot/ -->
+    <script src="{{ asset('js/chatbot/script.js') }}"></script>
+</body>
+</html>

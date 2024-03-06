@@ -1,5 +1,3 @@
-// public/js/chatbot/script.js
-
 // Fonction pour ouvrir/fermer la fenêtre du chatbot
 function toggleChatbot() {
     var chatbot = document.getElementById('chatbot');
@@ -12,11 +10,12 @@ function sendMessage() {
     var userMessage = messageInput.value;
 
     // Remplacez l'URL par l'URL correcte de votre API Chatbot
-    var apiUrl = 'https://app.chatbot.com/dashboard/65e735655ba0520006742454';
+    //var apiUrl = 'https://app.chatbot.com/dashboard/65e7b5c4106b510007b3a1ed';
+    var apiUrl = 'http://127.0.0.1:8000/chatbot';
 
     // Remplacez 'YOUR_CHATBOT_API_KEY' par votre clé d'API Chatbot
     var requestData = {
-        key: 'bw3sKhMTjo8LEC4jxXNCT3BlbkFJDQI9bSb5OMVnB0oZaiCk',
+        key: 'aOs72PVrOL9_Dtgsmvj4ODc_C8MHnmgI',
         message: userMessage,
     };
 
@@ -54,4 +53,6 @@ document.getElementById('chatbot-message').addEventListener('keydown', function(
         event.preventDefault(); // Empêcher le saut de ligne dans le champ de texte
         sendMessage(); // Appeler la fonction pour envoyer le message
     }
+
+    
 });

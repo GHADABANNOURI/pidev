@@ -10,6 +10,11 @@
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     font-family: 'Helvetica Neue', sans-serif;
     max-width: 300px;
+    transition: max-height 0.3s ease-in-out;
+}
+
+#chatbot.open {
+    max-height: 400px; /* Ajustez la hauteur maximale selon vos besoins */
 }
 
 /* Styles pour la fenêtre du chatbot */
@@ -24,6 +29,7 @@
     margin: 10px 0;
     padding: 10px;
     border-radius: 8px;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 #chatbot .message.user {
@@ -45,6 +51,18 @@
     margin-top: 10px;
     cursor: pointer;
     border-radius: 5px;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+#chatbot button:hover {
+    background-color: #297fb8;
+}
+
+/* Styles pour l'image du chatbot */
+#chatbot img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
 /* Ajoutez d'autres styles selon les besoins */

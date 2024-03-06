@@ -1,33 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- ... Autres balises head ... -->
+{% extends 'base.html.twig' %}
 
-    <!-- Charger le style du chatbot depuis le répertoire public/css/chatbot/ -->
-    <link rel="stylesheet" href="{{ asset('css/chatbot/chatbot.css') }}">
-</head>
-<body id="body">
+{% block title %}Chatbot Test{% endblock %}
 
-    <!-- ... Votre code existant ... -->
-
-    <!-- Chatbot -->
-    <div id="chatbot-container">
-        <!-- Placeholder pour le chatbot -->
-        <div id="chatbot" class="closed">
-            <!-- Contenu du chatbot ici -->
-            <div class="chat-window" id="chatbot-window">
-                <!-- Fenêtre de chat ici -->
-            </div>
-            <div>
-                <input type="text" id="chatbot-message" placeholder="Type a message...">
-                <button onclick="sendMessage()">Send</button>
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div id="chatbot-container">
+                    <div id="chatbot" class="closed">
+                        <div class="chat-window" id="chatbot-window">
+                            <!-- Fenêtre de chat ici -->
+                        </div>
+                        <div>
+                            <input type="text" id="chatbot-message" placeholder="Posez une question...">
+                            <button onclick="sendMessage()">Envoyer</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ... Votre code existant ... -->
-
-    <!-- Charger le script du chatbot depuis le répertoire public/js/chatbot/ -->
-    <script src="{{ asset('js/chatbot/script.js') }}"></script>
-</body>
-</html>
+    <!-- Charger le script du chatbot -->
+    <script src="{{ asset('js/chatbot.js') }}"></script>
+{% endblock %}

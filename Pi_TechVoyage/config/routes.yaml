@@ -12,7 +12,8 @@ app_publication_search_ajax:
     controller: 'App\Controller\YourController::searchAjax'
     methods: ['GET']
 
+
 chatbot:
     path: '/chatbot'
-    controller: 'App\Controller\ChatbotController::chat'
+    controller: 'App\Controller\ChatbotController::handleChatbotRequest'
     methods: ['POST']
